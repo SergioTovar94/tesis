@@ -1,0 +1,55 @@
+
+from estadisticas.matriz_correlacion import calcular_matriz_correlacion
+from estadisticas.vif import calcular_vif
+from tools.menu import seleccionar_opcion
+from utils.oi_utils import cargar_dataset
+from utils.data_utils import eliminar_columnas
+
+def analizar_dataset(carpeta, archivo):
+    """Permite realizar análisis sobre un dataset seleccionado."""
+    menu_analisis = {
+        "1": "Calcular matriz de correlación",
+        "2": "Calcular VIF (Factor de Inflación de Varianza)"
+    }
+    ruta = f"data/processed/{carpeta}/{archivo}"
+    df = cargar_dataset(ruta)
+
+    while True:
+        print("\n🔍 Columnas disponibles en el dataset:")
+        for i, col in enumerate(df.columns, 1):
+            print(f"{i}. {col}")
+
+        print("\nSi deseas eliminar una columna, ingresa su número.")
+        print("Si no deseas eliminar más columnas, ingresa 0.")
+
+        try:
+            opcion = int(input("\n👉 Selecciona una opción: ").strip())
+            if opcion == 0:
+                print("✅ Finalizando la eliminación de columnas.")
+                break
+            elif 1 <= opcion <= len(df.columns):
+                col_a_eliminar = df.columns[opcion - 1]
+                df = eliminar_columnas(df, [col_a_eliminar])
+                print(f"✅ Columna '{col_a_eliminar}' eliminada.")
+            else:
+                print("❌ Opción no válida. Intenta de nuevo.")
+        except ValueError:
+            print("❌ Ingresa un número válido.")
+
+    while True:
+        opcion = seleccionar_opcion(menu_analisis, "Análisis disponibles")
+        if opcion == "Calcular matriz de correlación":
+            
+            if df is not None:
+                calcular_matriz_correlacion(df, graficar=True)
+
+        elif opcion == "Calcular VIF (Factor de Inflación de Varianza)":
+            
+            if df is not None:
+                vif = calcular_vif(df)
+                print("\n🔍 VIF calculado:")
+                print(vif)
+
+        elif opcion is None:
+            print("🔙 Volviendo al menú principal.")
+            break
