@@ -1,15 +1,18 @@
 
 from estadisticas.matriz_correlacion import calcular_matriz_correlacion
 from estadisticas.vif import calcular_vif
+from estadisticas.distribucion import generar_grafico_distribucion
 from tools.menu import seleccionar_opcion
 from utils.oi_utils import cargar_dataset
 from utils.data_utils import eliminar_columnas
+
 
 def analizar_dataset(carpeta, archivo):
     """Permite realizar análisis sobre un dataset seleccionado."""
     menu_analisis = {
         "1": "Calcular matriz de correlación",
-        "2": "Calcular VIF (Factor de Inflación de Varianza)"
+        "2": "Calcular VIF (Factor de Inflación de Varianza)",
+        "3": "Generar gráfico de distribución"
     }
     ruta = f"data/processed/{carpeta}/{archivo}"
     df = cargar_dataset(ruta)
@@ -49,6 +52,10 @@ def analizar_dataset(carpeta, archivo):
                 vif = calcular_vif(df)
                 print("\n🔍 VIF calculado:")
                 print(vif)
+
+        elif opcion == "Generar gráfico de distribución":
+            if df is not None:
+                generar_grafico_distribucion(df, carpeta, archivo)
 
         elif opcion is None:
             print("🔙 Volviendo al menú principal.")
