@@ -34,6 +34,18 @@ def generar_grafico_distribucion(df, carpeta, archivo):
                 plt.close()  # Cerrar el gráfico para liberar memoria
 
                 print(f"✅ Gráfico guardado en: {output_path}")
+
+                serie = df[col].dropna()
+                print(f"\n📊 Estadísticos de '{col}':")
+                print(f"Media: {serie.mean():.4f}")
+                print(f"Mediana: {serie.median():.4f}")
+                print(f"Desviación estándar: {serie.std():.4f}")
+                print(f"Mínimo: {serie.min():.4f}")
+                print(f"Máximo: {serie.max():.4f}")
+                print(f"Percentil 25: {serie.quantile(0.25):.4f}")
+                print(f"Percentil 50: {serie.quantile(0.50):.4f}")
+                print(f"Percentil 75: {serie.quantile(0.75):.4f}")
+
         except ValueError:
             print("❌ Ingresa un número válido.")       
                 

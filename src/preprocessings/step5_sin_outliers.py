@@ -6,6 +6,12 @@ def eliminar_outliers(df: pd.DataFrame)-> pd.DataFrame:
     columnas_numericas = df.select_dtypes(include=['float64', 'int64']).columns
     columnas_numericas = columnas_numericas[~columnas_numericas.str.contains('RECIPU')]
     columnas_numericas = columnas_numericas[~columnas_numericas.str.contains('ANIOS')]
+
+    columnas_numericas = columnas_numericas[
+        (columnas_numericas != 'ESTRATO') & 
+        (~columnas_numericas.str.contains('TARIFA', case=False))
+    ]
+
     print(columnas_numericas)
     # Eliminar outliers con el criterio IQR
     for col in columnas_numericas:

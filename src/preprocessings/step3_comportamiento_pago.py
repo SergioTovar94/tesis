@@ -3,6 +3,7 @@ from src.utils.data_utils import eliminar_columnas, filtrar_por_anio
 from src.utils.print_utils import imprimir_nulos
 import pandas as pd
 from colorama import Fore, Style
+from tools.eliminar_nan import eliminar_nan_df
 
 def separarDataset(df: pd.DataFrame, anio: int)-> pd.DataFrame:
     if anio == 2019:
@@ -37,9 +38,9 @@ def run(anio: int, zona: str, carpeta: str):
     input_path = f"data/processed/{carpeta}/2_Dataset_transversal.csv"
     output_path = f"data/processed/{carpeta}/3_Dataset_{zona}.csv"
 
-    df = cargar_dataset(input_path)
+    df_inicio = cargar_dataset(input_path)
 
-    imprimir_nulos(df)
+    df = eliminar_nan_df(df_inicio)
 
     if zona == 'urbano':
         df = filtrar_por_anio(df, 2022)
