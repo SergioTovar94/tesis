@@ -1,4 +1,4 @@
-from preprocessing import alistar_datasets
+from src.preprocessing.pipeline import alistar_datasets
 from models.modelos import run as entrenar_modelos
 from tools.menu import seleccionar_opcion, seleccionar_archivo
 from statistic import analizar_dataset

@@ -1,27 +1,6 @@
-from src.utils.oi_utils import cargar_dataset, guardar_dataset
+from src.data.oi_utils import cargar_dataset, guardar_dataset
 from src.utils.data_utils import eliminar_columnas
-import pandas as pd
-
-def calcular_columnas(df: pd.DataFrame)->pd.DataFrame:
-    
-    df = df[
-        (df["IMPUESTO_PREDIAL_BRUTO_2021"] != 0) &
-        (df["AVALUO_CATASTRAL_2020"] != 0) &
-        (df["TARIFA_PREDIAL_2020"] != 0)
-    ]
-    # Crear la columna 'Descuento' (Predial Bruto - Predial Aplicado)
-    df["DESCUENTO"] = (df["IMPUESTO_PREDIAL_BRUTO_2021"] - df["IMPUESTO_PREDIAL_APLICADO_2021"])/df[
-        "IMPUESTO_PREDIAL_BRUTO_2021"]
-
-    # Crear la columna 'Variación Avalúo' (Año actual - Año anterior) / Año anterior
-    df["VARIACION_AVALUO_2021"] = (df["AVALUO_CATASTRAL_2021"] - df["AVALUO_CATASTRAL_2020"]) / df[
-        "AVALUO_CATASTRAL_2020"]
-
-    # Crear la columna 'Variación Tarifa' (Año actual - Año anterior) / Año anterior
-    df["VARIACION_TARIFA_2021"] = (df["TARIFA_PREDIAL_2021"] - df["TARIFA_PREDIAL_2020"]) / df[
-        "TARIFA_PREDIAL_2020"]
-
-    return df
+from src.features.feature_engineering import calcular_columnas
 
 def run(carpeta: str, zona: str):
 

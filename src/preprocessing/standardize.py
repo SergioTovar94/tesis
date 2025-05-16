@@ -1,10 +1,10 @@
-from src.utils.oi_utils import cargar_dataset, guardar_dataset
+from src.data.oi_utils import cargar_dataset, guardar_dataset
 from scipy.stats import zscore
 
 def run(dataset: str, carpeta: str):
 
-    input_path = f"data/processed/{carpeta}/{dataset}.csv"
-    output_path = f"data/processed/{carpeta}/{dataset}_estandarizado.csv"
+    input_path = f"data/processed/{carpeta}/Dataset_{dataset}.csv"
+    output_path = f"data/processed/{carpeta}/Dataset_{dataset}_estandarizado.csv"
 
     df = cargar_dataset(input_path)
 

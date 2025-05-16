@@ -1,4 +1,4 @@
-from src.utils.oi_utils import cargar_dataset, guardar_dataset
+from src.data.oi_utils import cargar_dataset, guardar_dataset
 from src.utils.data_utils import imprimir_nulos
 import pandas as pd
 from imblearn.over_sampling import SMOTE
@@ -21,8 +21,8 @@ def hibrido(x: pd.DataFrame, y: list) -> pd.DataFrame:
     return pd.concat([pd.DataFrame(x_hybrid), pd.Series(y_hybrid, name='COMPORTAMIENTO_PAGO')], axis=1)
 
 def run(dataset: str, carpeta: str):
-
-    input_path = f"data/processed/{carpeta}/{dataset}.csv"
+    print(f"Aplicando SMOTE a dataset {dataset}")
+    input_path = f"data/processed/{carpeta}/Dataset_{dataset}.csv"
 
     df = cargar_dataset(input_path)
 
@@ -36,13 +36,13 @@ def run(dataset: str, carpeta: str):
     data_submuestreo = sumbuestreo(x, y)
     data_hibrido = hibrido(x, y)
 
-    output_path = f"data/processed/{carpeta}/{dataset}_smote.csv"
+    output_path = f"data/processed/{carpeta}/Dataset_{dataset}_smote.csv"
     guardar_dataset(data_sobremuestreo, output_path)
 
-    output_path = f"data/processed/{carpeta}/{dataset}_undersample.csv"
+    output_path = f"data/processed/{carpeta}/Dataset_{dataset}_undersample.csv"
     guardar_dataset(data_submuestreo, output_path)
 
-    output_path = f"data/processed/{carpeta}/{dataset}_hibrido.csv"
+    output_path = f"data/processed/{carpeta}/Dataset_{dataset}_hibrido.csv"
     guardar_dataset(data_hibrido, output_path)
 
     print("Equilibrado realizado exitosamente:")

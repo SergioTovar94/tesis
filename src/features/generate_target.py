@@ -1,9 +1,9 @@
-from src.utils.oi_utils import cargar_dataset, guardar_dataset
+from src.data.oi_utils import cargar_dataset, guardar_dataset
 from src.utils.data_utils import eliminar_columnas, filtrar_por_anio
-from src.utils.print_utils import imprimir_nulos
 import pandas as pd
 from colorama import Fore, Style
-from tools.eliminar_nan import eliminar_nan_df
+from src.preprocessing.clean_data import eliminar_nan_df
+from src.utils.print_utils import print_message
 
 def separarDataset(df: pd.DataFrame, anio: int)-> pd.DataFrame:
     if anio == 2019:
@@ -34,9 +34,9 @@ def generar_comportamiento(df: pd.DataFrame, forma: str, anio: int) -> pd.DataFr
     return df
 
 def run(anio: int, zona: str, carpeta: str):
-
-    input_path = f"data/processed/{carpeta}/2_Dataset_transversal.csv"
-    output_path = f"data/processed/{carpeta}/3_Dataset_{zona}.csv"
+    print_message(f"Generando comportamiento de pago de {zona}")
+    input_path = f"data/processed/{carpeta}/Dataset_transversal_depurada.csv"
+    output_path = f"data/processed/{carpeta}/Dataset_{zona}.csv"
 
     df_inicio = cargar_dataset(input_path)
 

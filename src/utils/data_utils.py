@@ -1,18 +1,12 @@
 import pandas as pd
 import logging
 from colorama import Fore, Style
+from src.data.oi_utils import cargar_dataset, guardar_dataset
 
 def eliminar_columnas(df: pd.DataFrame, columnas_a_eliminar: list) -> pd.DataFrame:
     """Elimina columnas innecesarias."""
     df = df.drop(columns=columnas_a_eliminar)
     logging.info(f"✅ Se eliminaron las columnas: {columnas_a_eliminar}")
-    return df
-
-def eliminar_nulos(df: pd.DataFrame, columna: str) -> pd.DataFrame:
-    """Elimina registros con valores nulos en la columna indicada."""
-    nulos = df[columna].isna().sum()
-    df = df.dropna(subset=[columna])
-    logging.info(f"✅ Se eliminaron {Fore.RED}{nulos}{Style.RESET_ALL} registros con {columna} nulo")
     return df
 
 def imprimir_nulos(df: pd.DataFrame) -> pd.DataFrame:
@@ -33,4 +27,11 @@ def filtrar_por_anio(df: pd.DataFrame, anio: int) -> pd.DataFrame:
     columnas_a_eliminar = [col for col in df.columns if f"_{anio}]" in col]
     df = df.drop(columns=columnas_a_eliminar, errors='ignore')
     print(f"✅ Registros anio {anio} eliminados")
+    return df
+
+def reposiconar_comportamiento_pago(df: pd.DataFrame) -> pd.DataFrame: 
+    """Reubica el comportamiento de pago en la columna 'comportamiento_pago'."""
+    col = 'COMPORTAMIENTO_PAGO'
+    comportamiento = df.pop(col)
+    df[col] = comportamiento
     return df
