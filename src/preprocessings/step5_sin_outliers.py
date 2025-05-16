@@ -8,10 +8,9 @@ def eliminar_outliers(df: pd.DataFrame)-> pd.DataFrame:
     columnas_numericas = columnas_numericas[~columnas_numericas.str.contains('ANIOS')]
 
     columnas_numericas = columnas_numericas[
-        (columnas_numericas != 'ESTRATO') & 
-        (~columnas_numericas.str.contains('TARIFA', case=False))
+        (columnas_numericas != 'ESTRATO')
     ]
-
+    print("Columnas numericas")
     print(columnas_numericas)
     # Eliminar outliers con el criterio IQR
     for col in columnas_numericas:
@@ -20,7 +19,10 @@ def eliminar_outliers(df: pd.DataFrame)-> pd.DataFrame:
         IQR = Q3 - Q1
         LIM_INF = Q1 - 1.5 * IQR
         LIM_SUP = Q3 + 1.5 * IQR
+        print(f"Columna: {col}")
+        print(f"Q1: {Q1}, Q3: {Q3}, IQR: {IQR}")
         df = df[(df[col] >= LIM_INF) & (df[col] <= LIM_SUP)]
+    input("Presiona Enter para continuar...")
     return df
 
 def run(dataset: str, carpeta: str):
