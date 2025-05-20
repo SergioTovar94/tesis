@@ -6,7 +6,7 @@ from src.features import feature_engineering, generate_target
 from src.models import apply_smote
 from src.preprocessing import initial_filter, panel_to_cross_section
 from src.preprocessing import clean_data
-from src.data.oi_utils import actualizar_para_weka
+from src.data.io_utils import actualizar_para_weka
 
 def alistar_datasets(carpeta: str):
     
@@ -17,8 +17,6 @@ def alistar_datasets(carpeta: str):
     clean_data.run(carpeta)
 
     generate_target.run(2019, "urbano", carpeta)
-    
-    generate_target.run(2020, "rural", carpeta)
 
     delete_outliers.run("urbano", carpeta)
     
@@ -27,6 +25,8 @@ def alistar_datasets(carpeta: str):
     feature_engineering.run("urbano_sin_outliers", carpeta)
 
     apply_smote.run("urbano", carpeta)
+
+    apply_smote.run("urbano_col_cal", carpeta)
 
     standardize.run("urbano_col_cal", carpeta)
 

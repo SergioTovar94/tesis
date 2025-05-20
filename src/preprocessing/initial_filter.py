@@ -1,8 +1,9 @@
-from src.data.oi_utils import cargar_dataset, guardar_dataset
+from src.data.io_utils import cargar_dataset, guardar_dataset
 from utils.data_utils import eliminar_columnas, filtrar
 from src.preprocessing.clean_data import eliminar_nan_df
 from src.utils.print_utils import print_message
 import pandas as pd
+from preprocessing.clean_data import corregir_estratos
 
 import logging
 
@@ -17,6 +18,8 @@ def run(carpeta: str):
     pd.set_option("display.float_format", "{:.0f}".format)
 
     df = cargar_dataset(input_path)
+
+    df = corregir_estratos(df)
 
     df = eliminar_columnas(df, ['DESTINO_ECONOMICO', 'ESTRATO_SOCIAL', 'TARIFA_PREDIAL', 'FACTCAR','LIQIPU',
                                 'MORA', 'DEP_MORA', 'MORA_DEF', 'CANTMORA', 'MORATOT', 'BARRIO'

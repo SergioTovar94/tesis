@@ -1,5 +1,5 @@
 import pandas as pd
-from src.data.oi_utils import cargar_dataset, guardar_dataset
+from src.data.io_utils import cargar_dataset, guardar_dataset
 import logging
 
 logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)

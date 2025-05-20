@@ -1,7 +1,7 @@
 import pandas as pd
 import logging
 from colorama import Fore, Style
-from src.data.oi_utils import cargar_dataset, guardar_dataset
+from src.data.io_utils import cargar_dataset, guardar_dataset
 
 def eliminar_columnas(df: pd.DataFrame, columnas_a_eliminar: list) -> pd.DataFrame:
     """Elimina columnas innecesarias."""

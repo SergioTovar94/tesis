@@ -3,7 +3,7 @@ from eda.matriz_correlacion import calcular_matriz_correlacion
 from eda.vif import calcular_vif
 from eda.distribucion import generar_grafico_distribucion
 from tools.menu import seleccionar_opcion
-from src.data.oi_utils import cargar_dataset
+from src.data.io_utils import cargar_dataset
 from utils.data_utils import eliminar_columnas
 
 

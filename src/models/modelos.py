@@ -1,5 +1,5 @@
 from utils.modelo_utils import preprocess_data, evaluate_model, seleccionar_columnas
-from src.data.oi_utils import cargar_dataset
+from src.data.io_utils import cargar_dataset
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier

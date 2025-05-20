@@ -1,6 +1,7 @@
 import pandas as pd
-from src.data.oi_utils import cargar_dataset, guardar_dataset
+from src.data.io_utils import cargar_dataset, guardar_dataset
 from src.utils.print_utils import print_message
+import logging
 
 def eliminar_nan_df(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -130,6 +131,42 @@ def calcular_tarifa(avaluo: float, año: int) -> float:
         else:
             return 0.016
 
+def corregir_estratos(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Corrige valores atípicos de estrato (0, 8, 9) reemplazándolos por la moda del barrio.
+    Si el barrio no tiene datos válidos, usa la moda global.
+    
+    Args:
+        df: DataFrame con columnas 'BARRIO' y 'ESTRATO'
+        
+    Returns:
+        DataFrame con la columna 'ESTRATO' corregida
+    """
+    print_message("Corrigiendo estratos atípicos...")
+    
+    # 1. Calcular la moda por barrio (excluyendo 0, 8, 9)
+    moda_por_barrio = (
+        df[~df['ESTRATO'].isin([0, 8, 9])]
+        .groupby('BARRIO')['ESTRATO']
+        .agg(lambda x: x.mode()[0])
+    )
+    
+    # 2. Calcular la moda global para barrios no encontrados
+    moda_global = df[~df['ESTRATO'].isin([0, 8, 9])]['ESTRATO'].mode()[0]
+    
+    # 3. Convertir a diccionario para mejor performance
+    moda_dict = moda_por_barrio.to_dict()
+    
+    # 4. Aplicar la corrección
+    df['ESTRATO'] = df.apply(
+        lambda row: moda_dict.get(row['BARRIO'], moda_global) 
+                   if row['ESTRATO'] in [0, 8, 9] 
+                   else row['ESTRATO'],
+        axis=1
+    )
+    
+    logging.info(f"Estratos corregidos. Moda global: {moda_global}")
+    return df
 
 def run(carpeta: str):
     """
