@@ -22,7 +22,7 @@ def run(carpeta: str):
     df = cargar_dataset(input_path)
 
     # 2. Transformar de panel a transversal
-    columnas_fijas = ['NUMPRED', 'TIPO_PREDIO', 'ESTRATO', 'AREA_CONSTRUIDA']
+    columnas_fijas = ['NUMPRED', 'TIPO_PREDIO', 'ESTRATO', 'AREA_CONSTRUIDA', 'BARRIO']
     columnas_a_pivotear = ['AVALUO_CATASTRAL','IMPUESTO_PREDIAL_BRUTO', 'IMPUESTO_PREDIAL_APLICADO', 'RECIPU']
     pivote = ['VIGENCIA']
     df_transversal = pivotear(df, columnas_fijas, pivote, columnas_a_pivotear)

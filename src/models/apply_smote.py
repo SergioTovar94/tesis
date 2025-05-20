@@ -27,7 +27,7 @@ def run(dataset: str, carpeta: str):
     df = cargar_dataset(input_path)
 
     # Separar características (X) y etiquetas (y)
-    x = df.drop(['COMPORTAMIENTO_PAGO'], axis=1)
+    x = df.drop(['COMPORTAMIENTO_PAGO', 'NUMPRED', 'BARRIO'], axis=1)
     imprimir_nulos(x)
     y = df['COMPORTAMIENTO_PAGO']
     print(x.dtypes)

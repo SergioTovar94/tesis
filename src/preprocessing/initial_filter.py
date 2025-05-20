@@ -22,7 +22,7 @@ def run(carpeta: str):
     df = corregir_estratos(df)
 
     df = eliminar_columnas(df, ['DESTINO_ECONOMICO', 'ESTRATO_SOCIAL', 'TARIFA_PREDIAL', 'FACTCAR','LIQIPU',
-                                'MORA', 'DEP_MORA', 'MORA_DEF', 'CANTMORA', 'MORATOT', 'BARRIO'
+                                'MORA', 'DEP_MORA', 'MORA_DEF', 'CANTMORA', 'MORATOT'
     ])
 
     df = filtrar(df, "VIGENCIA", [2022, 2023, 2024])
