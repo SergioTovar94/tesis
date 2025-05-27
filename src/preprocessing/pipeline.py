@@ -4,13 +4,13 @@ from src.preprocessing import (
 from src.data import delete_outliers
 from src.features import feature_engineering, generate_target
 from src.models import apply_smote
-from src.preprocessing import initial_filter, panel_to_cross_section
+from src.preprocessing import initial_filter, panel_to_cross_section, split_dataset
 from src.preprocessing import clean_data
 from src.data.io_utils import actualizar_para_weka
 
 def alistar_datasets(carpeta: str):
     
-    initial_filter.run(carpeta)
+    """initial_filter.run(carpeta)
 
     panel_to_cross_section.run(carpeta)
 
@@ -31,5 +31,14 @@ def alistar_datasets(carpeta: str):
     standardize.run("urbano_col_cal", carpeta)
 
     apply_smote.run("urbano_sin_outliers_col_cal", carpeta)
+
+    split_dataset.run("urbano_col_cal", carpeta)
+
+    split_dataset.run("urbano_sin_outliers_col_cal", carpeta)
+
+    split_dataset.run("urbano_sin_outliers_col_cal_smote", carpeta)"""
+
+    split_dataset.run("urbano_col_cal_smote", carpeta)
+    
 
     actualizar_para_weka()
