@@ -2,6 +2,7 @@ from src.preprocessing.pipeline import alistar_datasets
 from models.modelos import run as entrenar_modelos
 from tools.menu import seleccionar_opcion, seleccionar_archivo
 from statistic import analizar_dataset
+from transform import transformar_dataset
 
 CARPETAS_DATASETS = {
     "1": "com_dejo_pagar",
@@ -23,8 +24,9 @@ def main():
     while True:
         print("\n📌 Opciones disponibles:")
         print("1️⃣ Alistar datasets")
-        print("2️⃣ Entrenar modelos")
+        print("2️⃣ Transformar dataset")
         print("3️⃣ Análisis de datasets")
+        print("4️⃣ Entrenar modelos")
         print("0️⃣ Salir")
 
         opcion = input("\n👉 Selecciona una opción: ").strip()
@@ -33,18 +35,22 @@ def main():
             carpeta = seleccionar_opcion(CARPETAS_DATASETS, "Carpetas disponibles")
             if carpeta:
                 alistar_datasets(carpeta)
-
         elif opcion == "2":
-            carpeta = seleccionar_opcion(CARPETAS_DATASETS, "Selecciona dataset")
+            carpeta = seleccionar_opcion(CARPETAS_DATASETS, "Selecciona un estadistico")
+            archivo = seleccionar_archivo(carpeta)
             if carpeta:
-                zona = seleccionar_opcion(ZONAS_DISPONIBLES, "Zonas disponibles")
-                if zona:
-                    entrenar_modelos(carpeta, zona)
+                transformar_dataset(carpeta, archivo)
         elif opcion == "3":
             carpeta = seleccionar_opcion(CARPETAS_DATASETS, "Selecciona un estadistico")
             archivo = seleccionar_archivo(carpeta)
             if carpeta:
                 analizar_dataset(carpeta, archivo)
+        elif opcion == "4":
+            carpeta = seleccionar_opcion(CARPETAS_DATASETS, "Selecciona dataset")
+            if carpeta:
+                zona = seleccionar_opcion(ZONAS_DISPONIBLES, "Zonas disponibles")
+                if zona:
+                    entrenar_modelos(carpeta, zona)
         elif opcion == "0":
             print("👋 Finalizando el programa.")
             break
