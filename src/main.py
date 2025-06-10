@@ -2,7 +2,7 @@ from src.preprocessing.pipeline import alistar_datasets
 from models.modelos import run as entrenar_modelos
 from tools.menu import seleccionar_opcion, seleccionar_archivo
 from statistic import analizar_dataset
-from transform import transformar_dataset
+from features.pipeline import transformar_dataset
 
 CARPETAS_DATASETS = {
     "1": "com_dejo_pagar",

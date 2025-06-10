@@ -1,14 +1,16 @@
 from src.data.io_utils import cargar_dataset, guardar_dataset
 from sklearn.preprocessing import StandardScaler, RobustScaler
-from sklearn.compose import ColumnTransformer
 import pandas as pd
+import os
 
-def escalar_datos(dataset: str, carpeta: str, metodo='zscore'):
-    input_path = f"data/processed/{carpeta}/Dataset_{dataset}.csv"
-    output_path = f"data/processed/{carpeta}/Dataset_{dataset}_estandarizado.csv"
+def escalar_datos(carpeta: str, dataset: str, metodo='zscore'):
+    input_path = f"data/processed/{carpeta}/{dataset}"
+    nombre_sin_ext = os.path.splitext(dataset)[0]
+    output_path = f"data/processed/{carpeta}/{nombre_sin_ext}_estandarizado.csv"
 
     df = cargar_dataset(input_path)
 
+    # Seleccionar método de escalamiento
     if metodo == 'zscore':
         scaler = StandardScaler()
     elif metodo == 'robust':
@@ -16,29 +18,26 @@ def escalar_datos(dataset: str, carpeta: str, metodo='zscore'):
     else:
         raise ValueError("Método debe ser 'zscore' o 'robust'")
 
-    x = df.drop(['COMPORTAMIENTO_PAGO', 'NUMPRED', 'BARRIO'], axis=1)
-    y = df[['COMPORTAMIENTO_PAGO']]  # mantener en formato DataFrame
+    # Seleccionar columnas numéricas a escalar
+    columnas_numericas = df.select_dtypes(include=['number']).columns.difference(['NUMPRED', 'COMPORTAMIENTO_PAGO'])
+    X = df[columnas_numericas]
+    y = df['COMPORTAMIENTO_PAGO']
+    numpred = df['NUMPRED'] if 'NUMPRED' in df.columns else None
 
-    columnas_passthrough = ['NUMPRED', 'BARRIO']
-    columnas_escaladas = x.columns.tolist()
-    columnas_finales = columnas_escaladas + columnas_passthrough + ['COMPORTAMIENTO_PAGO']
+    # Escalar
+    X_scaled = scaler.fit_transform(X)
+    df_escalado = pd.DataFrame(X_scaled, columns=columnas_numericas)
 
-    ct = ColumnTransformer(
-        transformers=[('scaler', scaler, columnas_escaladas)],
-        remainder='passthrough'
-    )
-
-    datos_escalados = ct.fit_transform(df.drop(columns=['COMPORTAMIENTO_PAGO']))
-
-    df_escalado = pd.DataFrame(datos_escalados, columns=columnas_escaladas + columnas_passthrough)
-
-    # Añadir nuevamente la variable objetivo
+    # Agregar columnas no escaladas
+    if numpred is not None:
+        df_escalado['NUMPRED'] = numpred.values
     df_escalado['COMPORTAMIENTO_PAGO'] = y.values
 
     # Reordenar columnas
+    columnas_finales = (['NUMPRED'] if numpred is not None else []) + columnas_numericas.tolist() + ['COMPORTAMIENTO_PAGO']
     df_escalado = df_escalado[columnas_finales]
 
-    # Guardar
+    # Guardar resultado
     guardar_dataset(df_escalado, output_path)
 
     return df_escalado
