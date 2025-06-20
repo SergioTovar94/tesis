@@ -1,6 +1,8 @@
 import joblib
 from sklearn.tree import export_text
 import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.tree import plot_tree
 
 def mostrar_estructura_modelo(ruta_modelo, nombres_variables):
     """
@@ -17,8 +19,18 @@ def mostrar_estructura_modelo(ruta_modelo, nombres_variables):
     print("="*50)
     
     if hasattr(modelo, 'tree_'):  # Árbol de decisión
+        plt.figure(figsize=(20, 10))  # Tamaño de la figura ajustable
+        plot_tree(modelo,
+                  feature_names=nombres_variables,
+                  class_names=True,  # o lista de nombres si tienes clases
+                  filled=True,       # colorea los nodos
+                  rounded=True,
+                  fontsize=10)
+        plt.savefig( f"data/graphs/arbol/arbol_decision.png")
+        print("Imagen guardada en arbol_decision.png")
+        plt.close()
         print("🌳 Estructura del árbol:")
-        print(export_text(modelo, feature_names=nombres_variables))
+        print(export_text(modelo, feature_names=nombres_variables, show_weights=True))
         
     elif hasattr(modelo, 'coef_'):  # Regresión logística
         print("📈 Coeficientes de regresión:")

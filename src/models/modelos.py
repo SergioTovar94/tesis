@@ -197,10 +197,11 @@ def optimizar_regresion_logistica(X_train, y_train, X_test, y_test):
 def optimizar_arbol_decision(X_train, y_train, X_test, y_test):
     """Optimiza hiperparámetros para Árbol de Decisión"""
     param_grid = {
-        'max_depth': [3, 5, 7, None],
-        'min_samples_split': [40],
-        'min_samples_leaf': [20],
-        'criterion': ['gini', 'entropy']
+        'max_depth': [3, 5, 7],
+        'min_samples_split': [200],
+        'min_samples_leaf': [100],
+        'criterion': ['gini', 'entropy'],
+        'ccp_alpha': [0.001]
     }
     
     grid = GridSearchCV(
