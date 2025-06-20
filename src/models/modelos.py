@@ -166,7 +166,7 @@ def optimizar_regresion_logistica(X_train, y_train, X_test, y_test):
     """Optimiza hiperparámetros para Regresión Logística"""
     param_grid = {
         'penalty': ['l1', 'l2'],
-        'C': [0.001, 0.01, 0.1, 1, 10, 100],
+        'C': [0.01, 0.1, 1],
         'solver': ['liblinear']
     }
     
@@ -197,9 +197,9 @@ def optimizar_regresion_logistica(X_train, y_train, X_test, y_test):
 def optimizar_arbol_decision(X_train, y_train, X_test, y_test):
     """Optimiza hiperparámetros para Árbol de Decisión"""
     param_grid = {
-        'max_depth': [3, 5, 7, 10, None],
-        'min_samples_split': [2, 5, 10, 20],
-        'min_samples_leaf': [1, 2, 4, 8],
+        'max_depth': [3, 5, 7, None],
+        'min_samples_split': [40],
+        'min_samples_leaf': [20],
         'criterion': ['gini', 'entropy']
     }
     
@@ -229,11 +229,12 @@ def optimizar_arbol_decision(X_train, y_train, X_test, y_test):
 def optimizar_mlp(X_train, y_train, X_test, y_test):
     """Optimiza hiperparámetros para Perceptrón Multicapa"""
     param_grid = {
-        'hidden_layer_sizes': [(50), (100), (50, 50)],
+        'hidden_layer_sizes': [(20), (40), (20, 20)],
         'activation': ['relu', 'tanh'],
-        'alpha': [0.0001, 0.001, 0.01],
-        'learning_rate_init': [0.001, 0.01],
-        'early_stopping': [True]
+        'alpha': [0.01, 0.1],
+        'learning_rate_init': [0.01],
+        'early_stopping': [True],
+        'max_iter': [500]  
     }
     
     grid = GridSearchCV(
