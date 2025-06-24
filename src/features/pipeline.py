@@ -2,7 +2,7 @@ from .standardize import escalar_datos
 from features import delete_outliers
 from .transform import aplicar_smote
 
-def transformar_dataset(carpeta: str, archivo: str):
+def transformar_dataset(archivo: str):
     
     while True:
         print("MENÚ DE TRANSFORMACIONES:")
@@ -15,21 +15,21 @@ def transformar_dataset(carpeta: str, archivo: str):
         
         if opcion == '1':
             print("Aplicando Z-score...")
-            escalar_datos(carpeta, archivo, metodo='zscore')
+            escalar_datos(archivo, metodo='zscore')
             print("Escalado aplicado.")
             
         elif opcion == '2':
             print("Aplicando RobustScaler...")
-            escalar_datos(carpeta, archivo, metodo='robust')
+            escalar_datos(archivo, metodo='robust')
             print("Escalado aplicado.")
             
         elif opcion == '3':
             print("Eliminando outliers con método IQR...")
-            delete_outliers.run(carpeta, archivo)
+            delete_outliers.run(archivo)
             
         elif opcion == '4':
             print("Aplicando SMOTE para balancear clases...")
-            aplicar_smote(carpeta, archivo)            
+            aplicar_smote(archivo)            
         elif opcion == '0':
             print("Saliendo")
             break

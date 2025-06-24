@@ -1,21 +1,20 @@
-import os
-import joblib
-from src import config
-from datetime import datetime
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neural_network import MLPClassifier
-from sklearn.model_selection import GridSearchCV, StratifiedKFold
-from sklearn.metrics import classification_report, f1_score, make_scorer, roc_auc_score,confusion_matrix
 from utils.modelo_utils import preprocess_data, seleccionar_columnas
 from src.data.io_utils import cargar_dataset
+from sklearn.tree import DecisionTreeClassifier
+import os
+from tools.menu import seleccionar_archivo
+from sklearn.model_selection import GridSearchCV, StratifiedKFold
+from sklearn.metrics import classification_report, f1_score, make_scorer, roc_auc_score,confusion_matrix
+import joblib
+from datetime import datetime
 
 f1_no_scorer = make_scorer(f1_score, pos_label=1) 
 
-def run(archivo: str):
+def run(carpeta: str):
     try:
-        input_path = os.path.join(config.DATA_PROCESSED, config.TIPO_VARIABLE_OBJETIVO, archivo)
-                
+        archivo = seleccionar_archivo(carpeta)
+        input_path = f"data/processed/{carpeta}/{archivo}"
+        
         if not os.path.exists(input_path):
             print(f"❌ El archivo '{input_path}' no existe. Verifica la ruta.")
             return
@@ -34,28 +33,10 @@ def run(archivo: str):
             return
         y_train = y_train.map({'SI': 0, 'NO': 1})
         y_test = y_test.map({'SI': 0, 'NO': 1})
-
-        print("\nMODELOS DISPONIBLES PARA OPTIMIZACIÓN:")
-        print("1. Regresión Logística")
-        print("2. Árbol de Decisión")
-        print("3. Perceptrón Multicapa (MLP)")
-        print("4. Optimizar los 3 modelos")
-        opcion = input("Seleccione el modelo a optimizar: ")
-            
+           
         resultados = {}
         
-        if opcion in ['1', '4']:
-            print("\nOPTIMIZANDO REGRESIÓN LOGÍSTICA...")
-            resultados['RL'] = optimizar_regresion_logistica(X_train, y_train, X_test, y_test)
-        if opcion in ['2', '4']:
-            print("\nOPTIMIZANDO ÁRBOL DE DECISIÓN...")
-            resultados['Arbol'] = optimizar_arbol_decision(X_train, y_train, X_test, y_test)
-            
-        if opcion in ['3', '4']:
-            print("\nOPTIMIZANDO PERCEPTRÓN MULTICAPA...")
-            resultados['MLP'] = optimizar_mlp(X_train, y_train, X_test, y_test)
-            
-            # 7. Mostrar resultados comparativos
+        resultados['Arbol'] = optimizar_arbol_decision(X_train, y_train, X_test, y_test)
 
         modelos_guardados = {}
         
@@ -68,8 +49,7 @@ def run(archivo: str):
                 print(f"{modelo:<20}|{str(datos['mejores_params']):<30}|{datos['f1_no']:.4f}|{datos['exactitud']:.4f}")
                 
                 # Guardar el modelo
-                ruta_modelo = os.path.join(config.CARPETA_MODELOS, config.TIPO_VARIABLE_OBJETIVO, modelo, '.joblib')
-                config.MODELOS
+                ruta_modelo = f"src/models/{archivo}.joblib"
                 joblib.dump({
                     'modelo': datos['mejor_modelo'],
                     'feature_names': X_train.columns.tolist()  
@@ -91,10 +71,11 @@ def run(archivo: str):
 
 def guardar_metadatos(dataset_path, modelos_guardados, reportes):
     """Guarda metadatos de la ejecución"""
-    ruta_absoluta = os.path.abspath(f"{config.CARPETA_REPORTES}/{config.ZONA_POR_DEFECTO}/metadata.txt")
+    ruta_absoluta = os.path.abspath(f"reports/metadata.txt")
     print(f"DEBUG: Intentando guardar en -> {ruta_absoluta}")
+    os.makedirs(f"data/reports/", exist_ok=True)   
     try:
-        with open(f"{config.CARPETA_REPORTES}/{config.ZONA_POR_DEFECTO}/metadata.txt", "w") as f:
+        with open(f"data/reports/metadata.txt", "w") as f:
             f.write(f"Fecha ejecución: {datetime.now()}\n")
             f.write(f"Dataset: {dataset_path}\n\n")
             
@@ -111,12 +92,12 @@ def guardar_metadatos(dataset_path, modelos_guardados, reportes):
     except Exception as e:
         print(f"ERROR al guardar metadatos: {e}")
 
-def validacion_automatica(modelos_guardados, X_test, y_test, zona):
+def validacion_automatica(modelos_guardados, X_test, y_test):
     """Realiza validación técnica automática para todos los modelos guardados"""
     reportes = {}
     
     # Crear directorio para reportes
-    report_dir = f"reports/{zona}"
+    report_dir = f"reports/"
     os.makedirs(report_dir, exist_ok=True)
     
     for modelo_nombre, ruta_modelo in modelos_guardados.items():
@@ -166,66 +147,20 @@ def evaluar_modelo(modelo, X_test, y_test):
     
     return resultados
 
-def optimizar_regresion_logistica(X_train, y_train, X_test, y_test):
-    """Optimiza hiperparámetros para Regresión Logística"""   
-    
-    grid = GridSearchCV(
-        LogisticRegression(max_iter=1000),
-        config.GRID_REGRESION_LOGISTICA,
-        cv=StratifiedKFold(n_splits=5),
-        scoring=f1_no_scorer,  # Priorizamos F1-Score
-        n_jobs=-1,
-        verbose=1
-    )
-    
-    grid.fit(X_train, y_train)
-    mejor_modelo = grid.best_estimator_
-    
-    # Evaluar en conjunto de prueba
-    y_pred = mejor_modelo.predict(X_test)
-    reporte = classification_report(y_test, y_pred, output_dict=True)
-    
-    return {
-        'mejores_params': grid.best_params_,
-        'mejor_modelo': mejor_modelo,
-        'f1_no': reporte['1']['f1-score'],
-        'exactitud': reporte['accuracy']
-    }
-
 def optimizar_arbol_decision(X_train, y_train, X_test, y_test):
     """Optimiza hiperparámetros para Árbol de Decisión"""
-
+    param_grid = {
+        'max_depth': [7]
+        , 'min_samples_split': [200]
+        , 'min_samples_leaf': [100]
+        , 'criterion': ['entropy']
+        , 'ccp_alpha': [0.0005]
+    }
     
     grid = GridSearchCV(
         DecisionTreeClassifier(),
-        config.GRID_ARBOL,
+        param_grid,
         cv=StratifiedKFold(n_splits=5),
-        scoring=f1_no_scorer,
-        n_jobs=-1,
-        verbose=1
-    )
-    
-    grid.fit(X_train, y_train)
-    mejor_modelo = grid.best_estimator_
-    
-    # Evaluar en conjunto de prueba
-    y_pred = mejor_modelo.predict(X_test)
-    reporte = classification_report(y_test, y_pred, output_dict=True)
-    
-    return {
-        'mejores_params': grid.best_params_,
-        'mejor_modelo': mejor_modelo,
-        'f1_no': reporte['1']['f1-score'],
-        'exactitud': reporte['accuracy']
-    }
-
-def optimizar_mlp(X_train, y_train, X_test, y_test):
-    """Optimiza hiperparámetros para Perceptrón Multicapa"""
-
-    grid = GridSearchCV(
-        MLPClassifier(max_iter=1000),
-        config.GRID_MLP,
-        cv=StratifiedKFold(n_splits=3),  # Menos folds por costo computacional
         scoring=f1_no_scorer,
         n_jobs=-1,
         verbose=1

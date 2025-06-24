@@ -1,3 +1,5 @@
+import os
+from src import config
 from src.data.io_utils import cargar_dataset, guardar_dataset
 from utils.data_utils import eliminar_columnas, filtrar
 from src.preprocessing.clean_data import eliminar_nan_df
@@ -9,11 +11,11 @@ import logging
 
 logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
 
-def run(carpeta: str):
+def run():
     print_message("Generando base inicial")
-    
-    input_path = "data/raw/LIQ_IPU_CONS_2024.csv"
-    output_path = f"data/processed/{carpeta}/Dataset_panel_depurada.csv"
+
+    input_path = config.DATA_ORIGINAL
+    output_path = os.path.join(config.DATA_PROCESSED, config.TIPO_VARIABLE_OBJETIVO, config.PANEL_DEPURADA)
 
     pd.set_option("display.float_format", "{:.0f}".format)
 
@@ -21,19 +23,13 @@ def run(carpeta: str):
 
     df = corregir_estratos(df)
 
-    df = eliminar_columnas(df, ['DESTINO_ECONOMICO', 'ESTRATO_SOCIAL', 'TARIFA_PREDIAL', 'FACTCAR','LIQIPU',
-                                'MORA', 'DEP_MORA', 'MORA_DEF', 'CANTMORA', 'MORATOT'
-    ])
+    df = eliminar_columnas(df, config.COLUMNAS_A_ELIMINAR)
 
-    df = filtrar(df, "VIGENCIA", [2022, 2023, 2024])
+    df = filtrar(df, "VIGENCIA", config.ANIOS_A_FILTRAR)
     
     df = eliminar_nan_df(df)
 
-    df = filtrar(df, "DESTINO_DESCRIPCION", [
-        "NULO", "AGROINDUSTRIAL", "SERVICIO FUNERARIO", "AGROFORESTAL", "CULTURAL", "SALUBRIDAD",
-        "INFRAESTRUCTURA HIDRICA", "PECUARIO", "FORESTAL", "LOTE NO URBANIZABLE (ServEsp)", "RECREACIONAL",
-        "INSTITUCIONAL", "MINERO", "RELIGIOSO", "AGRICOLA", "INDUSTRIAL", "EDUCATIVO", "USO PUBLICO"
-    ])
+    df = filtrar(df, "DESTINO_DESCRIPCION", config.DESTINOS_A_FILTRAR)
 
     guardar_dataset(df, output_path)
 

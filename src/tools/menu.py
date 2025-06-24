@@ -1,4 +1,5 @@
 import os
+from src import config
 
 def seleccionar_opcion(menu, titulo):
     """Muestra un menú y retorna la opción seleccionada."""
@@ -26,7 +27,7 @@ def seleccionar_archivo(carpeta):
         str: Nombre del archivo seleccionado o None si no hay archivos.
     """
     try:
-        carpeta = f'data/processed/{carpeta}'
+        carpeta = os.path.join(config.DATA_PROCESSED, carpeta)
         archivos = os.listdir(carpeta)
         archivos = [archivo for archivo in archivos if os.path.isfile(os.path.join(carpeta, archivo))]
 

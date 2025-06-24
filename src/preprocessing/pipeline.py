@@ -1,21 +1,17 @@
-from src.features import (
-    standardize,
-)
-from src.features import delete_outliers
-from src.features import feature_engineering, generate_target
-from src.models import apply_smote, split_dataset
+from src import config
 from src.preprocessing import initial_filter, panel_to_cross_section
+from src.features import generate_target
 from src.preprocessing import clean_data
-from src.data.io_utils import actualizar_para_weka
+from src.data.io_utils import ubicar_en_raiz
 
-def alistar_datasets(carpeta: str):
+def alistar_datasets():
     
-    initial_filter.run(carpeta)
+    initial_filter.run()
 
-    panel_to_cross_section.run(carpeta)
+    panel_to_cross_section.run()
 
-    clean_data.run(carpeta)
+    clean_data.run()
 
-    generate_target.run(2019, "urbano", carpeta)
+    generate_target.run()
 
-    actualizar_para_weka()
+    ubicar_en_raiz()

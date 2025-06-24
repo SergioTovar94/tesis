@@ -1,61 +1,71 @@
 import joblib
-from sklearn.tree import export_text
+from sklearn.tree import export_text, plot_tree
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.tree import plot_tree
 
-def mostrar_estructura_modelo(ruta_modelo, nombres_variables):
+def mostrar_estructura_modelo(ruta_modelo):
     """
-    Muestra la estructura básica del modelo guardado en joblib
-    
-    Parámetros:
-        ruta_modelo: str - Ruta al archivo .joblib
-        nombres_variables: list - Nombres de las variables de entrada
+    Muestra la estructura básica del modelo guardado en joblib y evalúa su interpretabilidad.
     """
 
-    modelo = joblib.load(f"src/models/{ruta_modelo}")
-    
-    print(f"\n🔍 Estructura del modelo: {type(modelo).__name__}")
-    print("="*50)
-    
-    if hasattr(modelo, 'tree_'):  # Árbol de decisión
-        plt.figure(figsize=(20, 10))  # Tamaño de la figura ajustable
+    obj = joblib.load(f"src/models/{ruta_modelo}")
+    modelo = obj['modelo']
+    nombres_variables = obj['feature_names']
+    tipo = type(modelo).__name__
+
+    print(f"\n🔍 Estructura del modelo: {tipo}")
+    print("=" * 60)
+
+    if hasattr(modelo, 'tree_'):
+
+        # Mostrar árbol
+        num_nodos = modelo.tree_.node_count
+        alto = max(8, int(num_nodos / 2)) 
+        plt.figure(figsize=(alto*1.5, alto))
         plot_tree(modelo,
                   feature_names=nombres_variables,
-                  class_names=True,  # o lista de nombres si tienes clases
-                  filled=True,       # colorea los nodos
+                  class_names=True,
+                  filled=True,
                   rounded=True,
                   fontsize=10)
-        plt.savefig( f"data/graphs/arbol/arbol_decision.png")
-        print("Imagen guardada en arbol_decision.png")
+        plt.savefig("data/graphs/arbol/arbol_decision.png")
+        print("📊 Imagen del árbol guardada en: data/graphs/arbol/arbol_decision.png")
         plt.close()
-        print("🌳 Estructura del árbol:")
-        print(export_text(modelo, feature_names=nombres_variables, show_weights=True))
-        
-    elif hasattr(modelo, 'coef_'):  # Regresión logística
-        print("📈 Coeficientes de regresión:")
+
+        # Texto del árbol
+        print("🌳 Reglas del árbol:")
+        texto = export_text(modelo, feature_names=nombres_variables, show_weights=True)
+        print(texto)
+
+        # Ejemplo lenguaje natural
+        print("\n📖 Ejemplo de explicación en lenguaje natural:")
+        for linea in texto.split("\n")[:3]:
+            regla = linea.strip().replace("|--- ", "")
+            print(f"- Si {regla}, entonces se sigue esta rama del árbol")
+
+    elif hasattr(modelo, 'coef_'):
+        print("📈 Coeficientes de la regresión logística:")
         coef_df = pd.DataFrame({
             'Variable': nombres_variables,
             'Coeficiente': modelo.coef_[0]
         })
         print(coef_df.to_string(index=False))
-        
-    else:  # Red neuronal u otros
-        print("🕵️ Este modelo no tiene una estructura imprimible directamente")
-        print("Tipo de modelo:", type(modelo).__name__)
+
+    elif hasattr(modelo, 'coefs_'):
+        print("🤖 Red neuronal multicapa (MLP):")
+        print("Este modelo no tiene una estructura directamente interpretable.")
+        # No actualizamos ningún criterio, sigue siendo caja negra.
+
+    else:
+        print("⚠️ Modelo no reconocido para interpretación.")
 
 def run():
     """
     Función principal para analizar la estructura de los modelos entrenados.
     """
     print("🔍 Análisis de la estructura de los modelos entrenados")
-    print("="*50)
-    
-    # Variables utilizadas en los modelos
-    variables = ['VARIACION_AVALUO', 'VARIACION_TARIFA', 'DESCUENTO', 
-             'AREA_CONSTRUIDA', 'ANIOS_PAGADOS', 'ESTRATO']
+    print("=" * 60)
 
-    # Mostrar estructura de cada modelo
-    mostrar_estructura_modelo('Arbol_urbano.joblib', variables)
-    mostrar_estructura_modelo('MLP_urbano.joblib', variables)
-    mostrar_estructura_modelo('RL_urbano.joblib', variables)
+    mostrar_estructura_modelo('Arbol_urbano.joblib')
+    mostrar_estructura_modelo('MLP_urbano.joblib')
+    mostrar_estructura_modelo('RL_urbano.joblib')

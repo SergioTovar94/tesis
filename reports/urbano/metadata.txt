@@ -1,0 +1,12 @@
+Fecha ejecución: 2025-06-23 23:41:57.445101
+Dataset: data/processed/com_si_no/Dataset_comuna_1_compartir_smote.csv
+
+Modelos optimizados:
+- Arbol: src/models/Dataset_comuna_1_compartir_smote.csv.joblib
+
+Resultados de validación:
+
+Arbol:
+  Accuracy: 0.9433
+  F1-Score (NO): 0.9406
+  AUC: 0.9626160486110996

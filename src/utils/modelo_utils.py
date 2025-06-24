@@ -1,25 +1,17 @@
 import numpy as np
+import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
+from src import config
 
-def preprocess_data(df):
-    X = df.drop(columns=['COMPORTAMIENTO_PAGO'])  
-    y = df['COMPORTAMIENTO_PAGO']  
+def preprocess_data(df: pd.DataFrame) -> tuple:
+    X = df.drop(columns=[config.VARIABLE_OBJETIVO])  
+    y = df[config.VARIABLE_OBJETIVO]  
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     X_train = X_train.select_dtypes(include=[np.number])
     X_test = X_test.select_dtypes(include=[np.number])
 
     return X_train, X_test, y_train, y_test
-
-def evaluate_model(model, X_test, y_test):
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-    report = classification_report(y_test, y_pred, target_names=["No Pagó", "Sí Pagó"])
-    
-    print(f"\n📊 Exactitud del modelo: {accuracy:.4f}")
-    print("\n🔍 Informe de Clasificación:\n")
-    print(report)
 
 def seleccionar_columnas(X_train, X_test):
     col_a_eliminar = X_train.columns[2]

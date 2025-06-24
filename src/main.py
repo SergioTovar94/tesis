@@ -1,24 +1,12 @@
-from src.preprocessing.pipeline import alistar_datasets
-from models.modelos import run as entrenar_modelos
-from models.analizar_modelo import run as analizar_modelos
+from src import config
 from tools.menu import seleccionar_opcion, seleccionar_archivo
-from statistic import analizar_dataset
+
+from src.preprocessing.pipeline import alistar_datasets
 from features.pipeline import transformar_dataset
-
-CARPETAS_DATASETS = {
-    "1": "com_dejo_pagar",
-    "2": "com_si_no"
-}
-
-ESTADISTICOS = {
-    "1": "Calcular matriz de correlación",
-    "2": "Calcular VIF (Factor de Inflación de Varianza)",
-}
-
-ZONAS_DISPONIBLES = {
-    "1": "urbano",
-    "2": "rural",
-}
+from statistic import analizar_dataset
+from models.modelos import run as entrenar_modelos
+from models.arboles import run as entrenar_arboles
+from models.analizar_modelo import run as analizar_modelos
 
 def main():
     """Función principal para elegir entre alistar datasets o entrenar modelos."""
@@ -28,33 +16,27 @@ def main():
         print("2️⃣ Transformar dataset")
         print("3️⃣ Análisis de datasets")
         print("4️⃣ Entrenar modelos")
-        print("5. Validar modelo existente")
+        print("5️⃣ Validar modelo existente")
+        print("6️⃣ Probar árboles")
         print("0️⃣ Salir")
 
         opcion = input("\n👉 Selecciona una opción: ").strip()
 
         if opcion == "1":
-            carpeta = seleccionar_opcion(CARPETAS_DATASETS, "Carpetas disponibles")
-            if carpeta:
-                alistar_datasets(carpeta)
+            alistar_datasets()
         elif opcion == "2":
-            carpeta = seleccionar_opcion(CARPETAS_DATASETS, "Selecciona un estadistico")
-            archivo = seleccionar_archivo(carpeta)
-            if carpeta:
-                transformar_dataset(carpeta, archivo)
+            archivo = seleccionar_archivo(config.TIPO_VARIABLE_OBJETIVO)
+            transformar_dataset(archivo)
         elif opcion == "3":
-            carpeta = seleccionar_opcion(CARPETAS_DATASETS, "Selecciona un estadistico")
-            archivo = seleccionar_archivo(carpeta)
-            if carpeta:
-                analizar_dataset(carpeta, archivo)
+            archivo = seleccionar_archivo(config.TIPO_VARIABLE_OBJETIVO)
+            analizar_dataset(archivo)
         elif opcion == "4":
-            carpeta = seleccionar_opcion(CARPETAS_DATASETS, "Selecciona dataset")
-            if carpeta:
-                zona = seleccionar_opcion(ZONAS_DISPONIBLES, "Zonas disponibles")
-                if zona:
-                    entrenar_modelos(carpeta, zona)
+            archivo = seleccionar_archivo(config.TIPO_VARIABLE_OBJETIVO)
+            entrenar_modelos(archivo)
         elif opcion == "5":
             analizar_modelos()
+        elif opcion == "6":
+            entrenar_arboles(config.TIPO_VARIABLE_OBJETIVO)
         elif opcion == "0":
             print("👋 Finalizando el programa.")
             break
