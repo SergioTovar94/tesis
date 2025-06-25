@@ -1,7 +1,7 @@
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 import pandas as pd
 
-def calcular_vif(df):
+def run(df):
     """
     Calcula el Factor de Inflación de Varianza (VIF) para un DataFrame.
 

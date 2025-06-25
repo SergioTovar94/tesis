@@ -1,22 +1,24 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
+from src import config
+import pandas as pd
 
-def calcular_matriz_correlacion(df, metodo="pearson", graficar=False):
+def run(df: pd.DataFrame, nombre_archivo: str):
     """
-    Calcula la matriz de correlación de un DataFrame.
-
-    Args:
-        df (pd.DataFrame): DataFrame de entrada.
-        metodo (str): Método de correlación ('pearson', 'spearman', 'kendall').
-        graficar (bool): Si es True, genera un heatmap de la matriz de correlación.
-
-    Returns:
-        pd.DataFrame: Matriz de correlación.
+    Calcula la matriz de correlación de las variables numéricas de un DataFrame.
     """
-    correlacion = df.corr(method=metodo)
-    if graficar:
-        plt.figure(figsize=(10, 8))
-        sns.heatmap(correlacion, annot=True, cmap="coolwarm", fmt=".2f")
-        plt.title("Matriz de Correlación")
-        plt.show()
-    return correlacion
+    df_num = df.select_dtypes(include='number')
+    correlacion = df_num.corr(method='pearson')
+    tam  = len(df.columns)/2
+    plt.figure(figsize=(tam, tam))
+    sns.heatmap(correlacion, annot=True, cmap="coolwarm", fmt=".2f")
+    plt.title("Matriz de Correlación")
+    
+    nombre_sin_extension, _ = os.path.splitext(nombre_archivo)
+    ruta_salida = os.path.join(config.DATA_GRAPHS, config.MATRICES, nombre_sin_extension)
+    
+    os.makedirs(os.path.dirname(ruta_salida), exist_ok=True)
+    plt.savefig(ruta_salida)
+    print(f"✅ Heatmap guardado en: {ruta_salida}")
+    plt.close()

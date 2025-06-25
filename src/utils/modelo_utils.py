@@ -10,7 +10,8 @@ def preprocess_data(df: pd.DataFrame) -> tuple:
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     X_train = X_train.select_dtypes(include=[np.number])
     X_test = X_test.select_dtypes(include=[np.number])
-
+    y_train = y_train.map({'SI': 0, 'NO': 1})
+    y_test = y_test.map({'SI': 0, 'NO': 1})
     return X_train, X_test, y_train, y_test
 
 def seleccionar_columnas(X_train, X_test):
@@ -41,3 +42,5 @@ def seleccionar_columnas(X_train, X_test):
             print("❌ Ingresa un número válido.")
 
     return X_train, X_test
+
+

@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from src import config
-from src.data.io_utils import cargar_dataset, guardar_dataset
+from src.utils.io_utils import cargar_dataset, guardar_dataset
 from src.utils.data_utils import eliminar_columnas, filtrar_por_anio
 from src.preprocessing.clean_data import eliminar_nan_df
 from src.utils.print_utils import print_message

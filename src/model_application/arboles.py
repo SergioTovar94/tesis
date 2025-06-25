@@ -1,8 +1,8 @@
 from utils.modelo_utils import preprocess_data, seleccionar_columnas
-from src.data.io_utils import cargar_dataset
+from src.utils.io_utils import cargar_dataset
 from sklearn.tree import DecisionTreeClassifier
 import os
-from tools.menu import seleccionar_archivo
+from src.utils.menu import seleccionar_archivo
 from sklearn.model_selection import GridSearchCV, StratifiedKFold
 from sklearn.metrics import classification_report, f1_score, make_scorer, roc_auc_score,confusion_matrix
 import joblib

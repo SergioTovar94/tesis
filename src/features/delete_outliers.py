@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from src import config
-from src.data.io_utils import cargar_dataset, guardar_dataset
+from src.utils.io_utils import cargar_dataset, guardar_dataset
 
 def eliminar_outliers(df: pd.DataFrame)-> pd.DataFrame:
     columnas_numericas = df.select_dtypes(include=['float64', 'int64']).columns
@@ -29,7 +29,7 @@ def eliminar_outliers(df: pd.DataFrame)-> pd.DataFrame:
 def run(dataset: str):
     input_path = os.path.join(config.DATA_PROCESSED, config.TIPO_VARIABLE_OBJETIVO, dataset)
     nombre_sin_ext = os.path.splitext(dataset)[0]
-    output_path = os.path.join(config.DATA_PROCESSED, config.TIPO_VARIABLE_OBJETIVO, nombre_sin_ext, '_sin_outliers.csv')
+    output_path = os.path.join(config.DATA_PROCESSED, config.TIPO_VARIABLE_OBJETIVO, f'{nombre_sin_ext}_sin_outliers.csv')
 
     df = cargar_dataset(input_path)
 

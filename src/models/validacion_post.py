@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.metrics import classification_report, roc_auc_score, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
-from src.data.io_utils import cargar_dataset
+from src.utils.io_utils import cargar_dataset
 from utils.modelo_utils import preprocess_data, seleccionar_columnas
 import shap
 

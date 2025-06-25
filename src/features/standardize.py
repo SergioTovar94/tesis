@@ -2,12 +2,12 @@ import os
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, RobustScaler
 from src import config
-from src.data.io_utils import cargar_dataset, guardar_dataset
+from src.utils.io_utils import cargar_dataset, guardar_dataset
 
-def escalar_datos(dataset: str, metodo: str):
+def run(dataset: str, metodo: str):
     input_path = os.path.join(config.DATA_PROCESSED, config.TIPO_VARIABLE_OBJETIVO, dataset)
     nombre_sin_ext = os.path.splitext(dataset)[0]
-    output_path = os.path.join(config.DATA_PROCESSED, config.TIPO_VARIABLE_OBJETIVO, nombre_sin_ext, '_estandarizado.csv')
+    output_path = os.path.join(config.DATA_PROCESSED, config.TIPO_VARIABLE_OBJETIVO,f'{nombre_sin_ext}_estandarizado.csv')
     df = cargar_dataset(input_path)
 
     # Seleccionar método de escalamiento

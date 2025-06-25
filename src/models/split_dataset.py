@@ -1,4 +1,4 @@
-from src.data.io_utils import cargar_dataset, guardar_dataset
+from src.utils.io_utils import cargar_dataset, guardar_dataset
 from utils.data_utils import eliminar_columnas
 import pandas as pd
 from sklearn.model_selection import train_test_split

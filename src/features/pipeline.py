@@ -1,6 +1,4 @@
-from .standardize import escalar_datos
-from features import delete_outliers
-from .transform import aplicar_smote
+from src.features import standardize, delete_outliers, smote
 
 def transformar_dataset(archivo: str):
     
@@ -15,12 +13,12 @@ def transformar_dataset(archivo: str):
         
         if opcion == '1':
             print("Aplicando Z-score...")
-            escalar_datos(archivo, metodo='zscore')
+            standardize.run(archivo, metodo='zscore')
             print("Escalado aplicado.")
             
         elif opcion == '2':
             print("Aplicando RobustScaler...")
-            escalar_datos(archivo, metodo='robust')
+            standardize.run(archivo, metodo='robust')
             print("Escalado aplicado.")
             
         elif opcion == '3':
@@ -29,7 +27,7 @@ def transformar_dataset(archivo: str):
             
         elif opcion == '4':
             print("Aplicando SMOTE para balancear clases...")
-            aplicar_smote(archivo)            
+            smote.run(archivo)            
         elif opcion == '0':
             print("Saliendo")
             break

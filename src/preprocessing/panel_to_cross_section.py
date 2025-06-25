@@ -1,14 +1,14 @@
 from src import config
 import os
-from src.data.io_utils import cargar_dataset, guardar_dataset
+from src.utils.io_utils import cargar_dataset, guardar_dataset
 from src.utils.print_utils import print_message
-
 import pandas as pd
-import logging
-
-logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
 
 def pivotear(df: pd.DataFrame, columnas_fijas: list, pivote: list, columnas_a_pivotear: list) -> pd.DataFrame:
+    """
+    Transforma un DataFrame en formato panel a formato transversal.
+    Agrupa por columnas fijas y pivotea columnas seleccionadas.
+    """
     df_filtrado = df[columnas_fijas + pivote + columnas_a_pivotear]
     df_transversal = df_filtrado.pivot(index=columnas_fijas, columns=pivote[0], values=columnas_a_pivotear)
     df_transversal.columns = [f"{col[0]}_{col[1]}" for col in df_transversal.columns]
@@ -29,4 +29,4 @@ def run():
     
     # 3. Guardar el resultado en data/processed/
     guardar_dataset(df_transversal, output_path)
-    print(f"✅ Base panel convertida a transversal")
+    print_message(f"✅ Base panel convertida a transversal")

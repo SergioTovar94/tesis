@@ -1,23 +1,26 @@
 import os
 from src import config
-from src.data.io_utils import cargar_dataset, guardar_dataset
+from src.utils.io_utils import cargar_dataset, guardar_dataset
 from utils.data_utils import eliminar_columnas, filtrar
-from src.preprocessing.clean_data import eliminar_nan_df
+from src.preprocessing.clean_data import eliminar_nan_df, corregir_estratos
 from src.utils.print_utils import print_message
-import pandas as pd
-from preprocessing.clean_data import corregir_estratos
-
-import logging
-
-logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
 
 def run():
+    """
+    Ejecuta el filtrado inicial y limpieza del dataset:
+    - Carga el dataset original.
+    - Corrige valores de estrato.
+    - Elimina columnas innecesarias.
+    - Filtra por años de vigencia.
+    - Elimina filas con valores nulos.
+    - Filtra por destino.
+    - Guarda el dataset limpio en carpeta procesada.
+    """
+    
     print_message("Generando base inicial")
 
-    input_path = config.DATA_ORIGINAL
+    input_path = os.path.join(config.DATA_RAW, config.DATA_ORIGINAL)
     output_path = os.path.join(config.DATA_PROCESSED, config.TIPO_VARIABLE_OBJETIVO, config.PANEL_DEPURADA)
-
-    pd.set_option("display.float_format", "{:.0f}".format)
 
     df = cargar_dataset(input_path)
 

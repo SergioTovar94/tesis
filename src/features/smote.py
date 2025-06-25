@@ -3,13 +3,13 @@ from src import config
 import pandas as pd
 import numpy as np
 from imblearn.over_sampling import SMOTE
-from src.data.io_utils import cargar_dataset, guardar_dataset
+from src.utils.io_utils import cargar_dataset, guardar_dataset
 
-def aplicar_smote(dataset: str):
+def run(dataset: str):
     input_path = os.path.join(config.DATA_PROCESSED, config.TIPO_VARIABLE_OBJETIVO, dataset)
 
     nombre_sin_ext = os.path.splitext(dataset)[0]
-    output_path = os.path.join(config.DATA_PROCESSED, config.TIPO_VARIABLE_OBJETIVO, nombre_sin_ext, '_smote.csv')
+    output_path = os.path.join(config.DATA_PROCESSED, config.TIPO_VARIABLE_OBJETIVO, f'{nombre_sin_ext}_smote.csv')
 
     df = cargar_dataset(input_path)
 

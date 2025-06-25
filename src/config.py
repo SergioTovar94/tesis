@@ -19,6 +19,13 @@ ESTADISTICOS = {
     "2": "Calcular VIF (Factor de Inflación de Varianza)",
 }
 
+MENU_MODELOS = {
+    "1": "Regresión Logística",
+    "2": "Árbol de Decisión",
+    "3": "Perceptrón Multicapa (MLP)",
+    "4": "Optimizar los 3 modelos"
+}
+
 # -------------------------------
 # CONFIGURACIÓN ESCOGIDA
 # -------------------------------
@@ -44,10 +51,12 @@ IQR_FACTOR = 1.5
 # -------------------------------
 
 DATA_PROCESSED = 'data/processed/'
+DATA_GRAPHS = 'data/graphs/'
 DATA_RAW = 'data/raw/'
 CARPETA_LOCAL = 'C:\\Users\\sergi\\OneDrive\\Documentos'
 CARPETA_MODELOS = 'models/'
 CARPETA_REPORTES = 'reports/'
+MATRICES = 'matrices/'
 
 # -------------------------------
 # RUTAS PRINCIPALES ARCHIVOS

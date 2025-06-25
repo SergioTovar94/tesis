@@ -2,21 +2,13 @@ import os
 import pandas as pd
 import logging
 from src import config
-from src.data.io_utils import cargar_dataset, guardar_dataset
+from src.utils.io_utils import cargar_dataset, guardar_dataset
 from src.utils.print_utils import print_message
 from src.utils.data_utils import eliminar_nan_df, eliminar_ceros_df
 
 def calcular_tarifa(avaluo: float, año: int) -> float:
     """
     Calcula la tarifa predial según el avalúo y el año (estatuto vigente).
-    Puedes modificar la lógica según los rangos del estatuto real.
-
-    Args:
-        avaluo (float): Avalúo catastral del predio.
-        año (int): Año a considerar para aplicar el estatuto correspondiente.
-
-    Returns:
-        float: Tarifa predial aplicada.
     """
     if año == 2019:
         salario_minimo = config.SALARIO_MINIMO_2019
@@ -36,14 +28,7 @@ def calcular_tarifa(avaluo: float, año: int) -> float:
 
 def corregir_estratos(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Corrige valores atípicos de estrato (0, 8, 9) reemplazándolos por la moda del barrio.
-    Si el barrio no tiene datos válidos, usa la moda global.
-    
-    Args:
-        df: DataFrame con columnas 'BARRIO' y 'ESTRATO'
-        
-    Returns:
-        DataFrame con la columna 'ESTRATO' corregida
+    Corrige valores atípicos de estrato (0, 8, 9) reemplazándolos por la moda del barrio o moda global.
     """
     print_message("Corrigiendo estratos atípicos...")
     
@@ -73,10 +58,7 @@ def corregir_estratos(df: pd.DataFrame) -> pd.DataFrame:
 
 def run():
     """
-    Ejecuta la limpieza de datos en el DataFrame.
-
-    Args:
-        carpeta (str): Ruta de la carpeta donde se encuentran los archivos CSV.
+    Ejecuta la limpieza y transformación del DataFrame transversal.
     """
     print_message("Limpiando datos")
     # Cargar el DataFrame desde un archivo CSV
@@ -97,4 +79,4 @@ def run():
     
     # Guardar el DataFrame limpio en un nuevo archivo CSV
     guardar_dataset(df, output_path)
-    print(f"✅ Base panel convertida a transversal")
+    print_message(f"✅ Base panel convertida a transversal")

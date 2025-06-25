@@ -7,7 +7,6 @@ def mostrar_estructura_modelo(ruta_modelo):
     """
     Muestra la estructura básica del modelo guardado en joblib y evalúa su interpretabilidad.
     """
-
     obj = joblib.load(f"src/models/{ruta_modelo}")
     modelo = obj['modelo']
     nombres_variables = obj['feature_names']
