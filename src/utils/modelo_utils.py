@@ -8,6 +8,7 @@ def preprocess_data(df: pd.DataFrame) -> tuple:
     y = df[config.VARIABLE_OBJETIVO]  
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    print(X_train.dtypes)
     X_train = X_train.select_dtypes(include=[np.number])
     X_test = X_test.select_dtypes(include=[np.number])
     y_train = y_train.map({'SI': 0, 'NO': 1})
@@ -15,11 +16,6 @@ def preprocess_data(df: pd.DataFrame) -> tuple:
     return X_train, X_test, y_train, y_test
 
 def seleccionar_columnas(X_train, X_test):
-    col_a_eliminar = X_train.columns[2]
-    for i in range(5):
-        col_a_eliminar = X_train.columns[4]
-        X_train = X_train.drop(columns=[col_a_eliminar])
-        X_test = X_test.drop(columns=[col_a_eliminar])
     while len(X_train.columns) > 1:
         print("\n🔍 Columnas disponibles para el entrenamiento:")
         for i, col in enumerate(X_train.columns, 1):

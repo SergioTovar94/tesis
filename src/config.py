@@ -57,6 +57,7 @@ CARPETA_LOCAL = 'C:\\Users\\sergi\\OneDrive\\Documentos'
 CARPETA_MODELOS = 'models/'
 CARPETA_REPORTES = 'reports/'
 MATRICES = 'matrices/'
+ARBOL = 'arbol/'
 
 # -------------------------------
 # RUTAS PRINCIPALES ARCHIVOS
@@ -144,3 +145,14 @@ GRID_MLP = {
     'early_stopping': [True],
     'max_iter': [500]
 }
+
+RUTA_ARBOLES = 'data/processed/com_si_no/arboles/'
+
+COLUMNAS_DEF = [
+    "ANIOS_PAGADOS",
+    "AREA_CONSTRUIDA",
+    "VARIACION_AVALUO",
+    "VARIACION_TARIFA",
+    "DESCUENTO",
+    "ESTRATO"
+]

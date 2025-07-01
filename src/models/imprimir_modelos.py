@@ -1,13 +1,16 @@
+import os
 import joblib
-from sklearn.tree import export_text, plot_tree
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.tree import plot_tree, export_text
+
+from src import config
 
 def mostrar_estructura_modelo(ruta_modelo):
     """
     Muestra la estructura básica del modelo guardado en joblib y evalúa su interpretabilidad.
     """
-    obj = joblib.load(f"src/models/{ruta_modelo}")
+    obj = joblib.load(ruta_modelo)
     modelo = obj['modelo']
     nombres_variables = obj['feature_names']
     tipo = type(modelo).__name__
@@ -27,8 +30,9 @@ def mostrar_estructura_modelo(ruta_modelo):
                   filled=True,
                   rounded=True,
                   fontsize=10)
-        plt.savefig("data/graphs/arbol/arbol_decision.png")
-        print("📊 Imagen del árbol guardada en: data/graphs/arbol/arbol_decision.png")
+        output_dir = os.path.join(config.DATA_GRAPHS, config.ARBOL, "arbol_decision.png")
+        plt.savefig(output_dir)
+        print(f"Imagen del árbol guardada en: {output_dir}")
         plt.close()
 
         # Texto del árbol
@@ -59,12 +63,26 @@ def mostrar_estructura_modelo(ruta_modelo):
         print("⚠️ Modelo no reconocido para interpretación.")
 
 def run():
-    """
-    Función principal para analizar la estructura de los modelos entrenados.
-    """
-    print("🔍 Análisis de la estructura de los modelos entrenados")
-    print("=" * 60)
+    carpeta_modelos = os.path.join(config.CARPETA_MODELOS, config.TIPO_VARIABLE_OBJETIVO)
+    modelos_disponibles = [
+                f for f in os.listdir(carpeta_modelos) if f.endswith('.joblib')
+            ]
+    if not modelos_disponibles:
+        print("❌ No hay modelos guardados.")
+    
+    print("\n📂 Modelos disponibles para imprimir:")
+    for idx, modelo in enumerate(modelos_disponibles, 1):
+        print(f"{idx} - {modelo}")
+    try:
+        opcion_modelo = int(input("\nSelecciona un modelo (número): "))
+        if 1 <= opcion_modelo <= len(modelos_disponibles):
+            modelo_elegido = modelos_disponibles[opcion_modelo - 1]
+            ruta_modelo = os.path.join(carpeta_modelos, modelo_elegido)
 
-    mostrar_estructura_modelo('Arbol_urbano.joblib')
-    mostrar_estructura_modelo('MLP_urbano.joblib')
-    mostrar_estructura_modelo('RL_urbano.joblib')
+            print(f"\n✅ Imprimiendo modelo: {modelo_elegido}")
+            mostrar_estructura_modelo(ruta_modelo)
+            print("✅ Evaluación completada.")
+        else:
+            print("❌ Opción fuera de rango.")
+    except ValueError:
+        print("❌ Opción inválida. Debe ser un número.")
